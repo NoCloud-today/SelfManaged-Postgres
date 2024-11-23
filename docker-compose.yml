@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     postgres1:
-        image: stephaneklein/postgres-with-walg:12.2-alpine-walg0.2.15
+        image: postgres-with-wal-g-shmpg
         environment:
             PGUSER: postgres
             PGPASSWORD: password
@@ -26,7 +26,7 @@ services:
 
     postgres2:
         build: ./docker-image/postgres-with-wal-g/
-        image: stephaneklein/postgres-with-walg:12.2-alpine-walg0.2.15
+        image: postgres-with-wal-g-shmpg
         environment:
             PGUSER: postgres
             PGPASSWORD: password
