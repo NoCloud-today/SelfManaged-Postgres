@@ -24,7 +24,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #ENV AWS_REGION=us-west-2
 #ENV AWS_ENDPOINT=http://s3-like-service:9000
 ENV AWS_S3_FORCE_PATH_STYLE=true
-ENV WALG_COMPRESSION_METHOD brotli
+ENV WALG_COMPRESSION_METHOD=brotli
 
 # See environment variables documentation https://github.com/wal-g/wal-g/blob/master/PostgreSQL.md#configuration
 ENV PGHOST=/var/run/postgresql

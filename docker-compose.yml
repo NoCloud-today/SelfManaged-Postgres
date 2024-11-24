@@ -1,6 +1,6 @@
 services:
     postgres:
-        image: postgres-with-wal-g-shmpg
+        image: "postgres-with-wal-g-shmpg:15"
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: password
