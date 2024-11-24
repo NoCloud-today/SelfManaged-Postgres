@@ -1,6 +1,6 @@
 services:
     postgres1:
-        image: postgres-with-wal-g-shmpg
+        image: postgres-with-wal-g-shmpg:15
         environment:
             PGUSER: postgres
             PGPASSWORD: password
@@ -24,7 +24,7 @@ services:
         - ./volumes/postgres/:/var/lib/postgresql/data/
 
     postgres2:
-        image: postgres-with-wal-g-shmpg
+        image: postgres-with-wal-g-shmpg:15
         environment:
             PGUSER: postgres
             PGPASSWORD: password

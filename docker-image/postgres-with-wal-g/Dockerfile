@@ -31,7 +31,7 @@ ENV PGHOST=/var/run/postgresql
 ENV PGUSER=postgres
 #ENV PGPASSWORD=secret
 ENV ARCHIVE_MODE=on
-ENV ARCHIVE_TIMEOUT=0
+ENV ARCHIVE_TIMEOUT=60
 #ENV WALG_PGP_KEY_PATH=/keys/wal-g.pub
 
 CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]

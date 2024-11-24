@@ -19,12 +19,6 @@ This playground is written as small scenario:
 
 ## The test scenario
 
-Build Docker Images:
-
-```
-$ ./scripts/build-postgres-with-wal-g-docker-image.sh
-```
-
 Start PostreSQL instance 1 and Minio (S3 like) server:
 
 ```
