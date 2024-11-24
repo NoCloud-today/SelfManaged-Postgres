@@ -1,0 +1,25 @@
+services:
+    postgres:
+        image: postgres-with-wal-g-shmpg
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: postgres
+
+            AWS_ACCESS_KEY_ID: "admin"
+            AWS_SECRET_ACCESS_KEY: "password"
+            WALE_S3_PREFIX: "s3://walg/backup"
+            AWS_ENDPOINT: "http://s3:9000"
+
+            ARCHIVE_TIMEOUT: 60
+        ports:
+        - "5432:5432"
+        volumes:
+        - ./volumes/postgres/:/var/lib/postgresql/data/
+
+    watchtower:
+      image: "containrrr/watchtower:latest"
+      environment:
+        WATCHTOWER_POLL_INTERVAL: 86400
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
