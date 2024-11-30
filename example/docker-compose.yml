@@ -1,5 +1,5 @@
 services:
-    postgres1:
+    postgres:
         image: postgres-with-wal-g-shmpg:15
         environment:
             PGUSER: postgres
@@ -12,12 +12,7 @@ services:
             AWS_SECRET_ACCESS_KEY: "password"
             WALE_S3_PREFIX: "s3://walg/backup"
             AWS_ENDPOINT: "http://s3:9000"
-            AWS_S3_FORCE_PATH_STYLE: "true"
-            AWS_REGION: us-east-1
 
-            WALG_COMPRESSION_METHOD: brotli
-            ARCHIVE_MODE: 'on'
-            ARCHIVE_TIMEOUT: 60
         ports:
         - "5432:5432"
         volumes:
@@ -36,8 +31,6 @@ services:
         command: >
             -c 'mkdir -p /data/walg
             && /usr/bin/minio server /data'
-
-
 
     watchtower:
       image: containrrr/watchtower:latest

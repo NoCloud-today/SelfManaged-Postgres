@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-cd "$(dirname "$0")/../"
+if [ -z "$1" ]; then
+  echo "Error: you need to specify postgres service name"
+  exit 1
+fi
 
-docker-compose exec postgres sh -c '/wal-g backup-push -f $PGDATA'
+cd "$(dirname "$0")/../$2"
+
+docker-compose exec $1 sh -c '/wal-g backup-push -f $PGDATA'
