@@ -23,27 +23,6 @@ services:
         volumes:
         - ./volumes/postgres/:/var/lib/postgresql/data/
 
-    postgres2:
-        image: postgres-with-wal-g-shmpg:15
-        environment:
-            PGUSER: postgres
-            PGPASSWORD: password
-            POSTGRES_USER: postgres
-            POSTGRES_DB: postgres
-            POSTGRES_PASSWORD: password
-
-            AWS_ACCESS_KEY_ID: "admin"
-            AWS_SECRET_ACCESS_KEY: "password"
-            WALE_S3_PREFIX: "s3://walg/backup"
-            AWS_ENDPOINT: "http://s3:9000"
-            AWS_S3_FORCE_PATH_STYLE: "true"
-            AWS_REGION: us-east-1
-
-            WALG_COMPRESSION_METHOD: brotli
-            ARCHIVE_MODE: 'off'
-        volumes:
-        - ./volumes/postgres2/:/var/lib/postgresql/data/
-
     s3:
         image: minio/minio
         environment:
@@ -57,3 +36,12 @@ services:
         command: >
             -c 'mkdir -p /data/walg
             && /usr/bin/minio server /data'
+
+
+
+    watchtower:
+      image: containrrr/watchtower:latest
+      environment:
+        WATCHTOWER_POLL_INTERVAL: 86400
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
