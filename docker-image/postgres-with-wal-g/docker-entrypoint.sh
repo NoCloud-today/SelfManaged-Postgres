@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-mkdir -p /etc/postgresql/ \
+FILE="/etc/postgresql/postgresql.conf"
+
+if [ -e "$FILE" ]; then
+    echo "aboba"
+    
+else
+    mkdir -p /etc/postgresql/ \
     && cp /usr/local/share/postgresql/postgresql.conf.sample /etc/postgresql/postgresql.conf.tmpl \
     && sed -ri "s/^#archive_mode = off/archive_mode = {{.Env.ARCHIVE_MODE}}/" /etc/postgresql/postgresql.conf.tmpl \
     && sed -ri "s/^#archive_timeout = 0/archive_timeout = {{.Env.ARCHIVE_TIMEOUT}}/" /etc/postgresql/postgresql.conf.tmpl \
@@ -9,6 +15,7 @@ mkdir -p /etc/postgresql/ \
     && sed -ri "s/^#restore_command = ''/restore_command = '\/wal-g wal-fetch %f %p'/" /etc/postgresql/postgresql.conf.tmpl
 
 
-gomplate -f /etc/postgresql/postgresql.conf.tmpl -o /etc/postgresql/postgresql.conf
+    gomplate -f /etc/postgresql/postgresql.conf.tmpl -o /etc/postgresql/postgresql.conf
+fi
 
 /usr/local/bin/docker-entrypoint.sh "$@"
