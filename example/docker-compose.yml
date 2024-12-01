@@ -34,8 +34,8 @@ services:
             && /usr/bin/minio server /data'
 
     watchtower:
-      image: containrrr/watchtower:latest
-      environment:
-        WATCHTOWER_POLL_INTERVAL: 86400
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+        image: containrrr/watchtower:latest
+        environment:
+            WATCHTOWER_POLL_INTERVAL: 86400
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock

@@ -1,17 +1,42 @@
 #!/usr/bin/env bash
 set -e
 
-cd "$(dirname "$0")/../$2"
+service="$1"
 
-timestamp="$3"
+timestamp="$2"
 
-docker-compose stop $1
+dir="$3"
 
-rm -rf volumes/$1 # костыль
+if [ -z "$service" ]; then
+  echo "Error: you need to specify postgres service name"
+  exit 1
+fi
 
-docker-compose run --rm $1 sh -c "
+cd "$(dirname "$0")/../$dir"
+
+docker-compose stop $service
+
+rm -rf volumes/$service
+
+docker-compose run --rm $service sh -c "
     /wal-g backup-fetch \$PGDATA LATEST \
     && touch \$PGDATA/recovery.signal \
-    && sed -i \"s/^#recovery_target_time = ''/recovery_target_time = '$timestamp'/p\" /etc/postgresql/postgresql.conf"
+    && sed -i \"s/^#recovery_target_time = ''/recovery_target_time = '$timestamp'/\" /etc/postgresql/postgresql.conf"
 
-docker-compose up -d $1
+docker-compose up -d $service
+
+until docker-compose exec $service pg_isready -U '$PGUSER'; do
+  echo "Waiting for PostgreSQL to be ready..."
+  sleep 2
+done
+
+docker-compose exec $service sh -c "
+    sed -i \"s/^recovery_target_time = '$timestamp'/#recovery_target_time = ''/\" /etc/postgresql/postgresql.conf"
+
+docker-compose exec --user postgres $service sh -c 'pg_ctl -D $PGDATA promote'
+
+if [ ! -z "$dir" ]; then
+    bash ../commands/make-basebackup.sh $service $dir
+else
+    bash commands/make-basebackup.sh $service
+fi
