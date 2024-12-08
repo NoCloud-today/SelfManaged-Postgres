@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-service="$1"
+service="postgres"
 
-dir="$2"
-
-if [ -z $service ]; then
-  echo "Error: you need to specify postgres service name"
-  exit 1
-fi
+dir="$1"
 
 cd "$(dirname "$0")/../$dir"
 
