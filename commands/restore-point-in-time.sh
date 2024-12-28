@@ -31,7 +31,7 @@ docker-compose exec $service sh -c "
 docker-compose exec --user postgres $service sh -c 'pg_ctl -D $PGDATA promote'
 
 if [ ! -z "$dir" ]; then
-    bash ../commands/make-basebackup.sh $service $dir
+    bash ../commands/make-basebackup.sh $dir
 else
-    bash commands/make-basebackup.sh $service
+    bash commands/make-basebackup.sh
 fi

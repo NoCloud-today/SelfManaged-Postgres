@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 ENV WALG_VERSION=v2.0.1
 ENV BROTLI_VERSION=v1.0.9
@@ -27,5 +27,5 @@ RUN set -ex \
      && install main/pg/wal-g / \
      && /wal-g --help
 
-FROM alpine:3.16
+FROM alpine:3.20
 COPY --from=builder /wal-g /

@@ -14,6 +14,8 @@ until docker-compose exec $service pg_isready -U '$PGUSER'; do
   sleep 2
 done
 
-cd "$(dirname "$0")"
-
-bash make-basebackup.sh postgres $dir
+if [ ! -z "$dir" ]; then
+    bash ../commands/make-basebackup.sh $dir
+else
+    bash commands/make-basebackup.sh
+fi
