@@ -8,13 +8,13 @@ services:
             POSTGRES_DB: postgres
             POSTGRES_PASSWORD: password
 
-            AWS_ACCESS_KEY_ID: "admin"
-            AWS_SECRET_ACCESS_KEY: "password"
+            AWS_ACCESS_KEY_ID: admin
+            AWS_SECRET_ACCESS_KEY: password
             WALE_S3_PREFIX: "s3://walg/backup"
             AWS_ENDPOINT: "http://s3:9000"
 
         ports:
-        - "5432:5432"
+        - "5433:5432"
         volumes:
         - ./volumes/postgres/:/var/lib/postgresql/data/
         - ./volumes/conf/:/etc/postgresql/
@@ -26,12 +26,14 @@ services:
             MINIO_SECRET_KEY: password
         ports:
         - "9000:9000"
+        - "9001:9001"
         volumes:
             - ./volumes/minio/:/data
         entrypoint: sh
         command: >
             -c 'mkdir -p /data/walg
-            && /usr/bin/minio server /data'
+            && mkdir -p /data/logical-backup
+            && /usr/bin/minio server /data --console-address ":9001"'
 
     watchtower:
         image: containrrr/watchtower:latest
@@ -39,3 +41,20 @@ services:
             WATCHTOWER_POLL_INTERVAL: 86400
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+
+    backup-service:
+        image: postgresql-backup-s3:16
+        environment:
+            S3_ACCESS_KEY_ID: admin
+            S3_SECRET_ACCESS_KEY: password
+            S3_ENDPOINT: "http://s3:9000"
+
+            S3_REGION: us-west-1
+            S3_BUCKET: logical-backup
+
+            SCHEDULE: "@midnight"
+
+            POSTGRES_DATABASE: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_HOST: postgres

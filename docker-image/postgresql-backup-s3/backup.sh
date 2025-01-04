@@ -84,11 +84,11 @@ fi
 
 echo "Uploading dump to $S3_BUCKET"
 
-cat $SRC_FILE | aws $AWS_ARGS s3 cp - s3://$S3_BUCKET/$S3_PREFIX/$DEST_FILE || exit 2
+cat $SRC_FILE | aws $AWS_ARGS s3 cp - --endpoint-url $S3_ENDPOINT s3://$S3_BUCKET/$S3_PREFIX/$DEST_FILE || exit 2
 
 if [ "${DELETE_OLDER_THAN}" != "**None**" ]; then
   >&2 echo "Checking for files older than ${DELETE_OLDER_THAN}"
-  aws $AWS_ARGS s3 ls s3://$S3_BUCKET/$S3_PREFIX/ | grep " PRE " -v | while read -r line;
+  aws $AWS_ARGS s3 ls --endpoint-url $S3_ENDPOINT s3://$S3_BUCKET/$S3_PREFIX/ | grep " PRE " -v | while read -r line;
     do
       fileName=`echo $line|awk {'print $4'}`
       created=`echo $line|awk {'print $1" "$2'}`
@@ -99,7 +99,7 @@ if [ "${DELETE_OLDER_THAN}" != "**None**" ]; then
           if [ $fileName != "" ]
             then
               >&2 echo "DELETING ${fileName}"
-              aws $AWS_ARGS s3 rm s3://$S3_BUCKET/$S3_PREFIX/$fileName
+              aws $AWS_ARGS s3 rm --endpoint-url $S3_ENDPOINT s3://$S3_BUCKET/$S3_PREFIX/$fileName
           fi
       else
           >&2 echo "${fileName} not older than ${DELETE_OLDER_THAN}"

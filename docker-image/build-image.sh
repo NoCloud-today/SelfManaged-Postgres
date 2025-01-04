@@ -11,4 +11,4 @@ docker build . -t postgres-with-wal-g-shmpg:16
 
 cd "../postgresql-backup-s3/"
 
-docker build . -t postgresql-backup-s3:latest
+docker build . -t postgresql-backup-s3:16
